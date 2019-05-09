@@ -119,7 +119,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/', async (req, res) => {
     const memos = await processQuery(
         `SELECT memo_id, username,content, starred, created, edited, is_edited 
-        FROM memo NATURAL JOIN memo ORDER BY memo_id DESC LIMIT 6`
+        FROM memo NATURAL JOIN account ORDER BY memo_id DESC LIMIT 6`
         ,[]);
     res.json(memos);
 });
