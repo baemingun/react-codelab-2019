@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     const content = req.body.contents;
     const now = new Date();
     await processQuery(
-        'INSERT INTO memo (uid,content,created,edited) VALUES (?,?,?,?)'
+        `INSERT INTO memo (uid,content,created,edited) VALUES (?,?,?,?)`
         ,[ID,content,now,now]);
     return res.json({ success: true });
 });
@@ -59,7 +59,7 @@ router.put('/:id',async (req, res) => {
         });
     }
     const result = await processQuery(
-        'SELECT * FROM memo WHERE memo_id = ?'
+        `SELECT * FROM memo WHERE memo_id = ?`
         ,[req.params.id]);
     if(!result) {
         return res.status(404).json({
@@ -75,8 +75,8 @@ router.put('/:id',async (req, res) => {
         });
     }
     const now = new Date();
-    const update_result = await processQuery(
-        'UPDATE memo SET content = ?, edited = ?, is_edited = 1 WHERE memo_id = ?'
+    await processQuery(
+        `UPDATE memo SET content = ?, edited = ?, is_edited = 1 WHERE memo_id = ?`
         ,[req.body.contents,now,req.params.id]);
     return res.json({ success: true });
 });
@@ -95,7 +95,7 @@ router.delete('/:id', async (req, res) => {
         });
     }
     const result = await processQuery(
-        'SELECT * FROM memo WHERE memo_id = ?'
+        `SELECT * FROM memo WHERE memo_id = ?`
         ,[req.params.id]);
     if(!result) {
         return res.status(404).json({
@@ -111,14 +111,15 @@ router.delete('/:id', async (req, res) => {
         });
     }
     await processQuery(
-        'DELETE FROM memo WHERE memo_id = ?'
+        `DELETE FROM memo WHERE memo_id = ?`
         ,[req.params.id]);
     res.json({ success: true });
 });
 
 router.get('/', async (req, res) => {
     const memos = await processQuery(
-        'SELECT * FROM memo ORDER BY memo_id DESC LIMIT 6'
+        `SELECT memo_id, username,content, starred, created, edited, is_edited 
+        FROM memo NATURAL JOIN memo ORDER BY memo_id DESC LIMIT 6`
         ,[]);
     res.json(memos);
 });

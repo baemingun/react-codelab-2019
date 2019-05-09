@@ -25,7 +25,7 @@ router.post('/signup', async (req, res) => {
         });
     }
     const ID = req.body.username;
-    const result = await processQuery('SELECT * FROM account WHERE username = ?', [ID]);
+    const result = await processQuery(`SELECT * FROM account WHERE username = ?`, [ID]);
     if(result.length > 0) {
         return res.status(409).json({
             error: "USERNAME EXISTS",
@@ -35,7 +35,7 @@ router.post('/signup', async (req, res) => {
         const PW = generateHash(req.body.password);
         const NOW = new Date();
         await processQuery(
-            'INSERT INTO account (username,password,created_at) VALUES (?,?,?);'
+            `INSERT INTO account (username,password,created_at) VALUES (?,?,?);`
             , [ID,PW,NOW]);
         return res.json({ success: true });
     }
@@ -49,7 +49,7 @@ router.post('/signin', async (req, res) => {
         });
     }
     const ID = req.body.username;
-    const result = await processQuery('SELECT * FROM account WHERE username = ?',[ID]);
+    const result = await processQuery(`SELECT * FROM account WHERE username = ?`,[ID]);
     if(result.length > 0) {
         if(!validateHash(req.body.password,result[0].password)) {
             return res.status(401).json({
